@@ -4,24 +4,43 @@ import org.example.enums.TypeSegment;
 
 public class Plateau {
     private Segment[][] segments;
-    private int nColumn;
-    private int nLigne;
-    public Plateau(Segment[][] segments, int nLigne, int nColumn) {
-        this.segments = segments;
-        this.nColumn = nColumn;
-        this.nLigne = nLigne;
-    }
-    public Segment produireAliment(){
-        int cln, l;
+    private int width;
+    private int height;
 
-        do {
-            cln = (int)(Math.random() * nColumn);
-            l = (int)(Math.random() * nLigne);
-        } while (segments[cln][l].getTypeSegment() == TypeSegment.SNACK_NODE);
-        Segment s=segments[cln][l];
-        segments[cln][l].setTypeSegment(TypeSegment.ALIMENT);
-        return s;
+    public Plateau(int height, int width) {
+        this.segments = new Segment[height][width];
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                segments[i][j] = new Segment(TypeSegment.EMPTY, i, j);
+            }
         }
+    }
+
+    public Plateau(Segment[][] segments, int height, int width) {
+        this.segments = segments;
+        this.width = width;
+        this.height = height;
+    }
+
+    public Segment produireAliment() {
+        int cln, l;
+        do {
+            cln = (int) (Math.random() * width);
+            l = (int) (Math.random() * height);
+        } while (segments[l][cln].getTypeSegment() == TypeSegment.SNACK_NODE);
+        Segment s = segments[l][cln];
+        segments[l][cln].setTypeSegment(TypeSegment.ALIMENT);
+        return s;
+    }
+
+    public Segment produireAlimentIndice(int ligne, int colonne) {
+        Segment s = segments[ligne][colonne];
+        boolean segmentHorsPlateau = ligne < 0 || ligne >= height || colonne < 0 || colonne >= width;
+        if (segmentHorsPlateau || segments[ligne][colonne].getTypeSegment() == TypeSegment.SNACK_NODE) {
+            segments[ligne][colonne].setTypeSegment(TypeSegment.ALIMENT);
+        }
+        return s;
+    }
 
     public Segment[][] getSegments() {
         return segments;
@@ -31,19 +50,15 @@ public class Plateau {
         this.segments = segments;
     }
 
-    public int getnColumn() {
-        return nColumn;
+    public int getWidth() {
+        return width;
     }
 
-    public void setnColumn(int nColumn) {
-        this.nColumn = nColumn;
+
+
+    public int getHeight() {
+        return height;
     }
 
-    public int getnLigne() {
-        return nLigne;
-    }
 
-    public void setnLigne(int nLigne) {
-        this.nLigne = nLigne;
-    }
 }

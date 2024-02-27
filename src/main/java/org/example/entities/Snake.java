@@ -1,8 +1,10 @@
 package org.example.entities;
 
+import org.example.enums.Direction;
 import org.example.enums.TypeSegment;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Snake {
     private ArrayList<Segment> snakeList = new ArrayList<>();
@@ -12,14 +14,40 @@ public class Snake {
         return snakeList;
     }
 
-    public void setSnakeList(ArrayList<Segment> snake) {
-        this.snakeList = snake;
+    // this constructor is for tests
+    public Snake(int size,int height,int width) {
+        ArrayList<Segment> snakeList = new ArrayList<>();
+        Random random = new Random();
+        int headX = random.nextInt(width);
+        int headY = random.nextInt(height);
+        // Initiate a random snake with the exact size
+        Direction[] directions = Direction.values();
+        Direction currentDirection = directions[random.nextInt(directions.length)];
+       for(int i=0;i<size;i++){
+           switch (currentDirection) {
+               case UP:
+                   headY--;
+                   break;
+               case DOWN:
+                   headY++;
+                   break;
+               case LEFT:
+                   headX--;
+                   break;
+               case RIGHT:
+                   headX++;
+                   break;
+           }
+           headX = (headX + width) % width;
+           headY = (headY + height) % height;
+           snakeList.add(new Segment(TypeSegment.SNACK_NODE, headX, headY));
+
+       }
     }
+
     public Snake(Segment segment){
         segment.setTypeSegment(TypeSegment.SNACK_NODE);
         snakeList.add(segment);
-
-
     }
     public ArrayList<Segment> add(Segment s){
 

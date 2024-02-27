@@ -6,18 +6,25 @@ import org.example.enums.TypeSegment;
 import java.util.ArrayList;
 
 public class Game {
+
+    // private int gamePaste = 1000;
     private Snake snake;
     private Plateau plateau;
-    private Direction direction;
-
-    private boolean gameOver = false;
+    private Direction direction = Direction.LEFT;
 
     public Game(Plateau plateau) {
-
-
         this.plateau = plateau;
-
     }
+
+    public Game(int plateauHeight, int plateauWidth, int snakeSize) {
+        this.plateau = new Plateau(plateauHeight, plateauWidth);
+        this.snake = new Snake(snakeSize,plateauHeight,plateauWidth);
+         plateau.produireAliment();
+    }
+    public Game(int plateauHeight, int plateauWidth) {
+        this.plateau = new Plateau(plateauHeight, plateauWidth);
+    }
+
 
     public Snake getSnake() {
         return snake;
@@ -43,27 +50,12 @@ public class Game {
         this.direction = direction;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
-
     public void startGame() {
-
-       Segment[][] segments=plateau.getSegments();
-        for(int i=0;i<plateau.getnLigne();i++){
-            for(int j=0;j< plateau.getnColumn();j++){
-             segments[i][j]=new Segment(TypeSegment.EMPTY, i, j);
-            }
-        }
-        int cln = (int) (Math.random() * 10);
-        int ligne = (int) (Math.random() * 7);
-        snake = new Snake(new Segment(TypeSegment.SNACK_NODE, cln, ligne));
-        direction = Direction.LEFT;
-        plateau.produireAliment();
-    }
-
-    public void endGame() {
-        gameOver = true;
+        // Check initialization
+        // each 1000 ms execute the function that will move the snake in the last given direction
+        // 1. listen to user direction getUserDirection()
+        // 2. move snake moveSnake()
+        // 3. check game state
     }
 
     public void move(Direction direction) {
@@ -85,10 +77,6 @@ public class Game {
             case DOWN:
                 snake.moveDown();
                 break;
-
-        }
-        if(checkBorderCollision() ||  checkSnackCollision()){
-            endGame();
 
         }
 
@@ -114,16 +102,16 @@ public class Game {
         int c = headSegment.getColonne();
 
 
-        if (l < 0 || l >= plateau.getnLigne() || c < 0 || c >= plateau.getnColumn()) {
+        if (l < 0 || l>= plateau.getHeight() || c < 0 || c>= plateau.getWidth()) {
             return true;
         }
         return false;
     }
 
+    public boolean isGameOver() {
+        return checkSnackCollision() || checkSnackCollision();
+    }
+
+    }
 
 
-
-
-
-
-}
